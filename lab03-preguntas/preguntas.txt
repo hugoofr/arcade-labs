@@ -1,4 +1,5 @@
 ¿Cuál es la capital de España?|Madrid|Barcelona|Sevilla|Toledo
 ¿Cuántos continentes hay?|5|7|6|3
-¿Qué lenguaje se usa para programar en Arcade?Python|Java|JavaScript|C
+¿Qué lenguaje se usa para programar en Arcade?|Python|Java|JavaScript|C
 ¿La tortilla de patata lleva cebolla?|Jamás|Si|No con excepciones|Tal vez
+¿Cuál es el planeta más cercano al Sol?|Mercurio|Venus|Tierra|Marte
