@@ -1,35 +1,38 @@
 import arcade
+import random #Para que la lluvia vaya por sitios aleatorios y parezca realista
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 800 #Ancho
+SCREEN_HEIGHT = 600 #Alto
 
 class MiJuego(arcade.Window):
     def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "ANIMACIÓN BÁSICA")
-        arcade.set_background_color(arcade.color.AIR_SUPERIORITY_BLUE)
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "ANIMACIÓN LLUVIA")
+        arcade.set_background_color(arcade.color.MIDNIGHT_BLUE) #Color del fondo
         
-        # Posición central X de nuestro cuadrado
-        self.posicion_x = 100
+        #Creamos lista de gotas
+        self.lista_gotas = []
+        #Generamos 65 gotas de agua
+        for i in range(65):
+            x = random.randrange(0, SCREEN_WIDTH) #Posición x aleatoria por todo el ancho de la ventana
+            y = random.randrange(0, SCREEN_HEIGHT) #Posición y aleatoria por todo el ancho de la ventana
+            self.lista_gotas.append([x, y]) #Añadimos a la lista cada gota generada
+        
 
+    #Función donde está el código del dibujo
     def on_draw(self):
-        self.clear()
+        self.clear() 
         
-        # Usamos tu función preferida:
-        # Left (Izquierda), Right (Derecha), Bottom (Abajo), Top (Arriba)
-        arcade.draw_lrbt_rectangle_filled(
-            left=self.posicion_x - 25,
-            right=self.posicion_x + 25,
-            bottom=275,  # Centro Y (300) menos 25
-            top=325,     # Centro Y (300) más 25
-            color=arcade.color.CANDY_APPLE_RED
-        )
+        #Dibujamos la hierba del suelo
+        arcade.draw_lrbt_rectangle_filled(0, 800, 0, 200, arcade.color.ENGLISH_GREEN)  
 
-    def on_update(self, delta_time):
-        self.posicion_x += 3
-        
-        # Reiniciar si sale de la pantalla
-        if self.posicion_x > SCREEN_WIDTH + 25:
-            self.posicion_x = -25
+        #Dibujamos la lluvia
+        for gota in self.lista_gotas:
+            x = gota[0]
+            y = gota[1]
+
+            #Dibujamos una línea hacia abajo para simular la gota cayendo
+            arcade.draw_line(x, y, x, y-15, arcade.color.LIGHT_BLUE)
+       
 
 if __name__ == "__main__":
     juego = MiJuego()
