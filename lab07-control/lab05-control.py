@@ -4,16 +4,47 @@ import arcade
 #CONSTANTES
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+MOVEMENT_SPEED = 3
+DEAD_ZONE = 0.02
+
+#CLASE SOL (Objeto que probamos en esta práctica para moverlo con el ratón, teclado...)
+class Sol:
+    def __init__(self, posicion_x, posicion_y, change_x, change_y, escala):
+        self.x = posicion_x
+        self.y = posicion_y
+        self.change_x = change_x 
+        self.change_y = change_y 
+        self.escala = escala
+        self.radio = 40 * self.escala
+        self.grosor_borde = 2 * self.escala
+
+    def draw(self):
+        """Método que le dice al sol cómo dibujarse a sí mismo"""
+        arcade.draw_circle_filled(self.x, self.y, self.radio, arcade.color.YELLOW)
+        arcade.draw_circle_outline(self.x, self.y, self.radio, arcade.color.ORANGE, self.grosor_borde)
+
+    def on_update(self):
+        """Método que actualiza la posición del sol según su velocidad"""
+        self.y += self.change_y
+        self.x += self.change_x
+
+        #Lógica para que el sol no se salga de la pantalla
+        if self.x < self.radio:
+            self.x = self.radio
+            
+        elif self.x > SCREEN_WIDTH - self.radio:
+            self.x = SCREEN_WIDTH - self.radio
+
+        if self.y < self.radio:
+            self.y = self.radio
+            
+        elif self.y > SCREEN_HEIGHT - self.radio:
+            self.y = SCREEN_HEIGHT - self.radio
 
 #FUNCIONES DE DIBUJO DE FONDO
 def dibujar_suelo():
     # Izquierda=0, Derecha=800, Abajo=0, Arriba=200
     arcade.draw_lrbt_rectangle_filled(0, SCREEN_WIDTH, 0, 200, arcade.color.SANDY_BROWN)
-
-def dibujar_sol(x, y, escala):
-    radio = 40 * escala
-    arcade.draw_circle_filled(x, y, radio, arcade.color.YELLOW)
-    arcade.draw_circle_outline(x, y, radio, arcade.color.ORANGE, 2 * escala)
 
 def dibujar_piramide(x, y, escala):
     ancho_medio = 100 * escala
@@ -56,12 +87,20 @@ class MyGame(arcade.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Lab 7 - User Control")
         arcade.set_background_color(arcade.color.AIR_SUPERIORITY_BLUE)
 
-        #Inicialemente el sol estará en el centro
-        self.sol_x = 400
-        self.sol_y = 300
+        self.mi_sol = Sol(400, 300, 0, 0, 1) #Creamos el sol
+         
+        self.set_mouse_visible(False) #Ocultamos el cursor del ratón
 
-        #Ocultamos el cursor del ratón 
-        self.set_mouse_visible(False)
+        joysticks = arcade.get_joysticks()
+
+        # If we have a game controller plugged in, grab it and
+        # make an instance variable out of it.
+        if joysticks:
+            self.joystick = joysticks[0]
+            self.joystick.open()
+        else:
+            print("There are no joysticks.")
+            self.joystick = None
 
     def on_draw(self):
         self.clear()
@@ -69,9 +108,9 @@ class MyGame(arcade.Window):
         #LLAMAMOS A NUESTRAS FUNCIONES PARA CREAR EL PAISAJE
         # Suelo
         dibujar_suelo()
-        
+
         # Sol
-        dibujar_sol(self.sol_x, self.sol_y, 1.0)
+        self.mi_sol.draw()
         
         # Pirámides
         dibujar_piramide(200, 200, 1.0)
@@ -85,11 +124,32 @@ class MyGame(arcade.Window):
         dibujar_piedra(550, 100, 1.0)
         dibujar_piedra(720, 120, 0.5)
 
-    #Función para mover con el ratón el sol (La función se activa cada vez que el ratón se mueve)
     def on_mouse_motion(self, x, y, dx, dy):
+        """Función para mover con el ratón el sol (La función se activa cada vez que el ratón se mueve)"""
         #Actualizamos las variables con la posición del ratón
-        self.sol_x = x
-        self.sol_y = y
+        self.mi_sol.x = x
+        self.mi_sol.y = y
+
+    def on_key_press(self, key, modifiers):
+        """Función que se llama cada vez que se pulsa una tecla"""
+        if key == arcade.key.LEFT:
+            self.mi_sol.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.mi_sol.change_x = MOVEMENT_SPEED
+        if key == arcade.key.UP:
+            self.mi_sol.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.mi_sol.change_y = -MOVEMENT_SPEED
+
+    def on_key_release(self, key, modifiers):
+        """ Called whenever a user releases a key. """
+        if key == arcade.key.LEFT or key == arcade.key.RIGHT:
+            self.mi_sol.change_x = 0
+        elif key == arcade.key.UP or key == arcade.key.DOWN:
+            self.mi_sol.change_y = 0
+
+    def on_update(self, delta_time):
+        self.mi_sol.on_update()
 
 def main():
     window = MyGame()
