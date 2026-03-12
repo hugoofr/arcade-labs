@@ -84,7 +84,7 @@ class MyGame(arcade.Window):
     def __init__(self):
         """ Initializer """
         # Call the parent class initializer
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Lab 7 - User Control")
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "BÁSICO")
         arcade.set_background_color(arcade.color.AIR_SUPERIORITY_BLUE)
                                                                                                                                                                                                                                                                                                                                                                
         self.mi_sol = Sol(400, 300, 0, 0, 1) #Creamos el sol
