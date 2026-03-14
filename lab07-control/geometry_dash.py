@@ -5,7 +5,7 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 MOVEMENT_SPEED = 5 #Velocidad horizontal del cubo
-CUBE_SIZE = 50 #Tamaño del cubo
+CUBE_SIZE = 60 #Tamaño del cubo
 GROUND_HEIGHT = 200 #Altura del suelo
 
 GRAVITY = 0.5 #Fuera con la que el cubo cae
@@ -20,10 +20,10 @@ def dibujar_cubo_estatico(center_x, center_y, size):
         bottom = center_y - (size / 2)
         top = center_y + (size / 2)
 
-        #Borde exterior negro
-        arcade.draw_lrbt_rectangle_outline(left, right, bottom, top, arcade.color.BLACK, border_width = 6)
-        #Relleno amarillo
-        arcade.draw_lrbt_rectangle_filled(left, right, bottom, top, arcade.color.YELLOW)
+        #Fondo negro solido para hacer el borde
+        arcade.draw_lrbt_rectangle_filled(left, right, bottom, top, arcade.color.BLACK)
+        #Relleno amarillo ligeramente más pequeño que el cuadrado negro
+        arcade.draw_lrbt_rectangle_filled(left + 2, right - 2, bottom + 2, top - 2, arcade.color.YELLOW)
         #Ojo izquierdo
         arcade.draw_lrbt_rectangle_filled(center_x - 14, center_x - 4, center_y + 4, center_y + 14, arcade.color.CYAN)
         arcade.draw_lrbt_rectangle_outline(center_x - 14, center_x - 4, center_y + 4, center_y + 14, arcade.color.BLACK, border_width = 2.5)
@@ -59,7 +59,7 @@ class Cubo(arcade.Sprite):
         self.center_y += self.change_y
 
         #Rotación 180º
-        if self.change_y != 0 and self.center_y > GROUND_HEIGHT + (self.lado / 2):
+        if self.center_y > GROUND_HEIGHT + (self.lado / 2):
             #Si está en el aire, gira (negativo = sentido de las agujas del reloj)
             self.angle -= ROTATION_SPEED
         else:
