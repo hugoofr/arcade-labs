@@ -5,7 +5,7 @@ import arcade
 # --- Constants ---
 SPRITE_SCALING_BOX = 0.5
 SPRITE_SCALING_PLAYER = 0.5
-SPRITE_SCALING_WALL = 0.5
+SPRITE_SCALING_WALL = 0.3
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -44,19 +44,21 @@ class MyGame(arcade.Window):
 
         # --- DIBUJAMOS EL CIRCUITO ---
         mapa = [
-            "OOOOOOOOOOOOOOOOOOOO",
-            "O                  O",
-            "O  XXXX  XXXXXXX   O",
-            "O  X     X     X   O",
-            "O  X  XXXX  X  X   O",
-            "O  X        X  X   O",
-            "O  XXXXXXXXXX  X   O",
-            "O                  O",
-            "OOOOOOOOOOOOOOOOOOOO"
+            "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+            "O                            O",
+            "O  XXXX  XXXXXXXXXXXXXXXXXXXXO",
+            "O  X     X                   O",
+            "O  X  XXXX  X                O",
+            "O  X        XXXX           X O",
+            "O                            O",
+            "O  XXXXXXXXXXXXX   XXXXXXXXX O",
+            "O                            O",
+            "O      XXXXXXXXXXXXXXXX      0",
+            "O P                          O",
+            "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
         ]
 
-        TAMANO_CAJA = 64  # Ajusta este número si las cajas no encajan bien
-        SPRITE_SCALING_WALL = 0.5
+        TAMANO_CAJA = 85
 
         for fila_index in range(len(mapa)):
             fila = mapa[fila_index]
@@ -83,11 +85,18 @@ class MyGame(arcade.Window):
                     wall.center_y = centro_y
                     self.wall_list.append(wall)
 
-        #Creamos el jugador
-        self.player_sprite = arcade.Sprite("lab09-walls/jugador.png", SPRITE_SCALING_PLAYER)
-        self.player_sprite.center_x = 50
-        self.player_sprite.center_y = 64
-        self.player_list.append(self.player_sprite)
+                #En la letra P se va a situar el jugador
+                elif letra == "P":
+                    #Creamos el jugador
+                    self.player_sprite = arcade.Sprite("lab09-walls/jugador.png", SPRITE_SCALING_PLAYER)
+
+                    #Le damos las coordenadas exactas de la 'P'
+                    self.player_sprite.center_x = centro_x
+                    self.player_sprite.center_y = centro_y
+                    print(f"Jugador colocado en: {centro_x}, {centro_y}")
+
+                    #Lo añadimos a la lista de cosas a dibujar
+                    self.player_list.append(self.player_sprite)
 
         #Creamos el motor de física: esto identifica al jugador y a un alista de sprites por los que el jugador no tiene permitido pasar
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
